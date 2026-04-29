@@ -393,9 +393,8 @@ let vecinos=[], pagos=[], gastos=[], activos=[], config={};
 let currentMya=0, chartInst=null;
 
 const PERIODOS = [];
-for(let y=2024;y<=2026;y++) for(let m=1;m<=12;m++){
+for(let y=2024;y<=2027;y++) for(let m=1;m<=12;m++){
   if(y===2024&&m<11) continue;
-  if(y===2026&&m>4) break;
   PERIODOS.push(`${y}-${String(m).padStart(2,'0')}`);
 }
 const MESES_EXTRA = [12,1,2,3]; // dic,ene,feb,mar
