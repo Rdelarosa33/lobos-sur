@@ -746,6 +746,14 @@ function openFAB(){
   openModal();
 }
 
+function refreshPeriodos(vid){
+  const mesesPagados = pagos.filter(p=>p.vecino_id===parseInt(vid)).map(p=>p.periodo);
+  const sel = document.getElementById('f-per');
+  if(!sel) return;
+  sel.innerHTML = PERIODOS.filter(p=>!mesesPagados.includes(p))
+    .map(p=>`<option value="${p}">${labelPeriodo(p)} — S/ ${montoEsperado(p)}</option>`).join('');
+}
+
 function openPagoModal(){ document.getElementById('modal-title').textContent='Registrar pago'; document.getElementById('modal-body').innerHTML=pagoForm(); openModal(); }
 function openPagoForm(vid,nombre){
   document.getElementById('modal-title').textContent='Pago — '+nombre;
@@ -754,12 +762,16 @@ function openPagoForm(vid,nombre){
 }
 function pagoForm(preselect){
   const opts=vecinos.map(v=>`<option value="${v.id}" ${preselect==v.id?'selected':''}>${v.nombre}</option>`).join('');
-  const pOpts=PERIODOS.map(p=>`<option value="${p}">${labelPeriodo(p)} — S/ ${montoEsperado(p)}</option>`).join('');
+  const vid=parseInt(document.getElementById('f-vid')?.value||preselect||0);
+  const mesesPagados = pagos.filter(p=>p.vecino_id===vid).map(p=>p.periodo);
+  const pOpts=PERIODOS.filter(p=>!mesesPagados.includes(p))
+    .map(p=>`<option value="${p}">${labelPeriodo(p)} — S/ ${montoEsperado(p)}</option>`).join('');
   return `
     <label class="form-label">Vecino</label>
-    <select class="form-input" id="f-vid">${opts}</select>
+    <select class="form-input" id="f-vid" onchange="refreshPeriodos(this.value)">${opts}</select>
     <label class="form-label">Periodo</label>
     <select class="form-input" id="f-per">${pOpts}</select>
+    <div style="font-size:11px;color:var(--texto3);margin-top:-10px;margin-bottom:14px">Solo se muestran meses no pagados</div>
     <label class="form-label">Monto (S/)</label>
     <input class="form-input" id="f-monto" type="number" step="0.01" placeholder="50">
     <button class="btn-p" onclick="savePago()">Guardar pago</button>
