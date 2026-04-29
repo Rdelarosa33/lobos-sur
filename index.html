@@ -13,7 +13,6 @@
 <!-- ║  CONFIGURACIÓN — EDITAR ANTES DE PUBLICAR   ║ -->
 <!-- ╚══════════════════════════════════════════════╝ -->
 <script>
-  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx2eWttdGJ0Zm5yc3l6dXVwc2hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NjE4OTUsImV4cCI6MjA5MjUzNzg5NX0.62YB2Micpbo5fQwz-kwSimjrArnsD8TjMvhx4Y5ZiI8';
 </script>
 
 <style>
@@ -44,14 +43,6 @@ html,body{height:100%;background:var(--fondo);font-family:'DM Sans',sans-serif;c
 body{padding-bottom:env(safe-area-inset-bottom)}
 
 /* SETUP SCREEN */
-#setup-screen{position:fixed;inset:0;background:var(--verde);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;z-index:999}
-#setup-screen h1{color:#e8f5e9;font-size:22px;font-weight:500;margin-bottom:8px;text-align:center}
-#setup-screen p{color:var(--verde3);font-size:13px;text-align:center;margin-bottom:32px;line-height:1.6}
-.setup-field{width:100%;max-width:360px;margin-bottom:14px}
-.setup-label{color:var(--verde3);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:block}
-.setup-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#e8f5e9;font-size:14px;font-family:'DM Mono',monospace;outline:none}
-.setup-input::placeholder{color:rgba(255,255,255,.3)}
-.setup-btn{width:100%;max-width:360px;padding:15px;background:#e8f5e9;color:var(--verde);border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
 .setup-err{color:#f1948a;font-size:12px;text-align:center;margin-top:10px;display:none}
 
 /* LOADER */
@@ -226,21 +217,8 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 </head>
 <body>
 
-<!-- SETUP SCREEN (primera vez) -->
-<div id="setup-screen" style="display:none">
-  <h1>Configurar Lobos Sur</h1>
-  <p>Ingresa las credenciales de tu proyecto Supabase.<br>Las encontrarás en Settings → API de tu proyecto.</p>
-  <div class="setup-field">
-    <label class="setup-label">Project URL</label>
-    <input class="setup-input" id="s-url" placeholder="https://xxxx.supabase.co" type="url">
+  
   </div>
-  <div class="setup-field">
-    <label class="setup-label">Anon / Public Key</label>
-    <input class="setup-input" id="s-key" placeholder="eyJhbGciOi..." type="text">
-  </div>
-  <button class="setup-btn" onclick="saveConfig()">Conectar y continuar</button>
-  <div class="setup-err" id="s-err">No se pudo conectar. Verifica las credenciales.</div>
-</div>
 
 <!-- LOADER -->
 <div id="loader"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div>
@@ -370,7 +348,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 // ============================================================
-// SUPABASE CLIENT (CDN)
+// INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', initApp);
 
@@ -389,8 +367,7 @@ async function initApp(){
   } catch(e) {
     console.error(e);
     document.getElementById('loader').classList.add('hide');
-    document.getElementById('setup-screen').style.display='flex';
-    document.getElementById('s-err').style.display='block';
+    console.error('Error conectando a la base de datos');
   }
 }
 
@@ -437,16 +414,7 @@ const CAT_COLOR={Parques:'#e8f4f0',Plantas:'#d4ede2',Riego:'#d6eaf8',Luminarias:
 // ============================================================
 // INIT
 // ============================================================
-function initApp(){
-  // Check if credentials are hardcoded or in localStorage
-  let url = SUPA_URL, key = SUPA_KEY;
-  if(url.includes('TU_PROYECTO')){
-    const stored = localStorage.getItem('ls_config');
-    if(stored){ const c=JSON.parse(stored); url=c.url; key=c.key; }
-    else { document.getElementById('loader').classList.add('hide'); document.getElementById('setup-screen').style.display='flex'; return; }
-  }
-  connectSupabase(url, key);
-}
+
 
 
 
